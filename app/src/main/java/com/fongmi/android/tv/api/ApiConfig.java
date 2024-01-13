@@ -125,11 +125,20 @@ public class ApiConfig {
 
     private void loadConfig(Callback callback) {
         try {
-            checkJson(JsonParser.parseString(Decoder.getJson(config.getUrl())).getAsJsonObject(), callback);
-        } catch (Throwable e) {
-            if (TextUtils.isEmpty(config.getUrl())) App.post(() -> callback.error(""));
-            else loadCache(callback, e);
-            e.printStackTrace();
+         App.post(() -> callback.error("本软件为免费开源项目, 以学习交流为目的"));
+         checkJson(JsonParser.parseString(Decoder.getJson(getUrl())).getAsJsonObject(), callback);
+         } catch (Throwable e) {
+         if (TextUtils.isEmpty(config.getUrl())) {
+         App.post(() -> callback.error("本app为github上的免费更新app"));
+         App.post(() -> callback.error("未配置源地址，默认添加内置源，您可在设置中启用"));
+         String url = "http://饭太硬.top/tv";
+         config.setUrl(url);
+         } else {
+         loadCache(callback, e);
+        }
+        if (TextUtils.isEmpty(config.getUrl())) App.post(() -> callback.error(""));
+        else loadCache(callback, e);
+        e.printStackTrace();
         }
     }
 
